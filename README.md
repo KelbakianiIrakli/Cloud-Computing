@@ -1,4 +1,4 @@
-# Cloud-Computing
+# Participants
 Nidhi Mishra
 Mathias Tonini
 Irakli Kelbakiani
