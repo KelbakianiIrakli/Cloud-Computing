@@ -8,6 +8,8 @@ DB_DBNAME=watches
 DB_USER=watches
 DB_PASS=watches
 
+
+
 docker run -d --network=host \
 	-e DB_HOST=$DB_HOST \
 	-e DB_PORT=$DB_PORT \
