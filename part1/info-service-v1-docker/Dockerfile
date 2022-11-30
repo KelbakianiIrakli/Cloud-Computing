@@ -1,12 +1,8 @@
-# syntax=docker/dockerfile:1
-
-FROM python:3.8-slim-buster
-
+FROM python:3.11-slim-bullseye
+RUN apt update
 WORKDIR /app
-
-COPY requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
-
-COPY . .
-
-CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
+ADD requirements.txt /app/requirements.txt
+RUN pip install -r /app/requirements.txt
+ADD . /app
+ENV PORT 8080
+CMD ["gunicorn", "app:app", "--config=config.py"]
