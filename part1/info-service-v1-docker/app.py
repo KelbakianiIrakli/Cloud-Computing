@@ -1,11 +1,12 @@
 
 from flask import Flask
 from flask import jsonify
-
+import os
 from sqlalchemy import create_engine
 from sqlalchemy import text
 from sqlalchemy.sql import select
 from flask import request
+import config
 # class Watch:
 #     def __init__(self, row):
 #         self.sku = row[0]
@@ -18,11 +19,14 @@ from flask import request
 #         self.movement = row[7]
 
 # engine = create_engine("mysql+pymysql://root:root@localhost/cloud_computing")
-engine = create_engine("mysql+pymysql://root:root1234@34.170.133.52/watch")
+engine = create_engine("mysql+pymysql://root:root1234@10.92.32.3/watch")
 
 
 app = Flask(__name__)
 
+@app.route("/",methods=["GET"])
+def healthCheck(sku=None):
+    return "APi working"
 
 @app.route("/watch/",methods=["POST"])
 def addWatch():
@@ -60,4 +64,6 @@ def getWatch(sku=None):
         print(result)
         return str(result)
 
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=config.PORT, debug=config.DEBUG_MODE)
 
