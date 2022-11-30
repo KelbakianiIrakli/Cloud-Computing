@@ -5,3 +5,4 @@ gunicorn
 itsdangerous
 Jinja2
 MarkupSafe
+flask-swagger-ui

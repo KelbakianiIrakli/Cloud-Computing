@@ -7,6 +7,8 @@ from sqlalchemy import text
 from sqlalchemy.sql import select
 from flask import request
 import config
+from flask_swagger_ui import get_swaggerui_blueprint
+
 # class Watch:
 #     def __init__(self, row):
 #         self.sku = row[0]
@@ -28,6 +30,21 @@ app = Flask(__name__)
 def healthCheck(sku=None):
     return "APi working"
 
+@app.rout('/static/<path:path>')
+def send_static(path):
+    return send_from_dictionary('static', path)
+    ### swagger specific ###
+SWAGGER_URL = '/swagger'
+API_URL = '/static/swagger.json'
+SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "Seans-Python-Flask-REST-Boilerplate"
+    }
+)
+app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
+### end swagger specific ###
 @app.route("/watch/",methods=["POST"])
 def addWatch():
     print("add watch")
