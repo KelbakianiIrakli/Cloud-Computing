@@ -1,0 +1,34 @@
+utomating deployements
+
+export PROJECT_ID=ace-amplifier-363309
+export REGION=us-east1
+
+./gcloud container clusters get-credentials autopilot-cluster-4 --region us-east1
+
+Authenticating docker
+
+gcloud auth configure-docker \
+    ${REGION}-docker.pkg.dev
+
+Build docker from .
+docker build -t \
+    ${REGION}-docker.pkg.dev/${PROJECT_ID}/watches/watch-app:v11 \
+    .
+
+Docker push
+docker push \
+    ${REGION}-docker.pkg.dev/${PROJECT_ID}/watches/watch-app:v11
+
+Updating existing deployments
+kubectl set image deployment/deployment_service container=Docker_image
+
+Eg:
+kubectl set image deployment/nginx-1 watch-app-sha256-1=${REGION}-docker.pkg.dev/${PROJECT_ID}/watches/watch-app:v11
+
+
+
+Creating new deployments , service
+
+kubectl create deployment watch-app --image=${REGION}-docker.pkg.dev/${PROJECT_ID}/watches/watch-app:v8
+kubectl expose deployment watch-app --name=watch-app-service --type=LoadBalancer --port 81 --target-port 8080
+
