@@ -1,184 +1,162 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "description": "sean",
-    "version": "1.0.0",
-    "title": "Seans-Python3-Flask-Rest-Boilerplate",
-    "license": {
-      "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
-    }
+    "title": "Watch info service 2022",
+    "version": "1.0"
   },
   "servers": [
     {
-      "url": "/"
-    }
-  ],
-  "tags": [
+      "url": "http://localhost/info/v1"
+    },
     {
-      "name": "Book Request",
-      "description": "Example API for requesting and return watch requests"
+      "url": "http://localhost:1080/info/v1"
+    },
+    {
+      "url": "http://localhost:5000/info/v1"
     }
   ],
   "paths": {
     "/watch": {
-      "get": {
-        "tags": [
-          "Get Watch Request"
-        ],
-        "summary": "Returns watch",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/components/schemas/bookRequests"
-            }
-          }
-        }
-      },
       "post": {
-        "tags": [
-          "Watch Request"
-        ],
-        "summary": "Create a new watch request system",
+        "summary": "Add a new watch to the store",
         "requestBody": {
-          "description": "Watch Request Post Object",
+          "description": "Watch object that needs to be added to the store",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/bookRequestPostBody"
+                "$ref": "#/components/schemas/Watch"
               }
             }
           }
         },
-        "produces": [
-          "application/json"
-        ],
         "responses": {
-          "201": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/components/schemas/id"
-            }
+          "200": {
+            "description": "Successful operation"
           },
           "400": {
-            "description": "Failed. Bad post data."
+            "description": "Invalid input"
           }
         }
       }
     },
     "/watch/{sku}": {
-      "parameters": [
-        {
-          "name": "sku",
-          "in": "path",
-          "required": true,
-          "description": "ID of the cat that we want to match",
-          "type": "string"
-        }
-      ],
       "get": {
-        "tags": [
-          "watch Request"
-        ],
-        "summary": "Get watch request with given sku",
+        "summary": "Return watch data",
         "parameters": [
           {
+            "name": "sku",
             "in": "path",
-            "name": "id",
+            "description": "SKU of the watch to return",
             "required": true,
-            "description": "watch Request sku",
             "schema": {
-              "$ref": "#/components/schemas/id"
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/components/schemas/bookRequest"
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Watch"
+                }
+              }
             }
           },
-          "400": {
-            "description": "Failed. Misunderstood Request."
-          },
           "404": {
-            "description": "Failed. Book request not found."
+            "description": "Watch not found"
           }
         }
       },
       "put": {
-        "summary": "edit a book request by ID",
-        "tags": [
-          "Book Request"
-        ],
+        "summary": "Updates a watch in the store with form data",
         "parameters": [
           {
+            "name": "sku",
             "in": "path",
-            "name": "id",
+            "description": "SKU of the watch that needs to be updated",
             "required": true,
-            "description": "Book Request id",
             "schema": {
-              "$ref": "#/components/schemas/id"
+              "type": "string"
             }
           }
         ],
         "requestBody": {
-          "description": "Book Request Object",
+          "description": "Properties that needs to be updated",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/bookRequest"
+                "$ref": "#/components/schemas/Watch"
               }
             }
           }
         },
-        "produces": [
-          "application/json"
-        ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/components/schemas/bookRequest"
-            }
+            "description": "Successful operation"
           },
           "400": {
-            "description": "Failed. Bad post data."
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Watch not found"
           }
         }
       },
       "delete": {
-        "summary": "Delete Book Request by ID",
-        "tags": [
-          "Book Request"
-        ],
+        "summary": "Deletes a watch",
         "parameters": [
           {
+            "name": "sku",
             "in": "path",
-            "name": "id",
+            "description": "SKU of the watch to delete",
             "required": true,
-            "description": "Book Request Id",
             "schema": {
-              "$ref": "#/components/schemas/id"
+              "type": "string"
             }
           }
         ],
         "responses": {
-          "204": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/components/schemas/id"
-            }
-          },
-          "400": {
-            "description": "Failed. Misunderstood Request."
+          "200": {
+            "description": "Successful operation"
           },
           "404": {
-            "description": "Failed. Book Request not found."
+            "description": "Watch not found"
+          }
+        }
+      }
+    },
+    "/watch/search": {
+      "get": {
+        "summary": "Finds watches by SKU",
+        "parameters": [
+          {
+            "name": "sku",
+            "in": "query",
+            "description": "partial sku",
+            "example": "CAR2",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Watch"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -186,51 +164,47 @@
   },
   "components": {
     "schemas": {
-      "id": {
+      "Watch": {
+        "type": "object",
+        "required": [
+          "sku",
+          "type",
+          "gender",
+          "year"
+        ],
         "properties": {
-          "uuid": {
+          "sku": {
             "type": "string"
-          }
-        }
-      },
-      "bookRequestPostBody": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string",
-            "format": "string"
           },
-          "email": {
+          "type": {
             "type": "string",
-            "format": "email"
-          }
-        }
-      },
-      "bookRequest": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string",
-            "format": "string"
+            "enum": [
+              "watch",
+              "chrono"
+            ]
           },
-          "email": {
+          "gender": {
             "type": "string",
-            "format": "email"
+            "enum": [
+              "man",
+              "woman"
+            ]
           },
-          "timestamp": {
-            "type": "string",
-            "format": "number"
-          }
-        }
-      },
-      "bookRequests": {
-        "type": "object",
-        "properties": {
-          "bookRequest": {
-            "type": "object",
-            "additionalProperties": {
-              "$ref": "#/components/schemas/bookRequest"
-            }
+          "year": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "dial_material": {
+            "type": "string"
+          },
+          "case_material": {
+            "type": "string"
+          },
+          "bracelet_material": {
+            "type": "string"
+          },
+          "movement": {
+            "type": "string"
           }
         }
       }

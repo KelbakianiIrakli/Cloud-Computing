@@ -7,3 +7,4 @@ Jinja2
 MarkupSafe
 pymongo==3.10.1
 dnspython
+flask_swagger_ui
