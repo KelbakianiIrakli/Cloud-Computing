@@ -5,4 +5,5 @@ gunicorn
 itsdangerous
 Jinja2
 MarkupSafe
-flask-swagger-ui
+pymongo==3.10.1
+dnspython
