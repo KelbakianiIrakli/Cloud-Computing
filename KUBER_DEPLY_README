@@ -1,0 +1,104 @@
+ 1) Clone the hello-app source code and Dockerfile by running the following commands
+
+ git clone https://github.com/GoogleCloudPlatform/kubernetes-engine-samples cd kubernetes-engine-samples/hello-app
+
+
+2) 
+export PROJECT_ID=ace-amplifier-363309
+export REGION=us-east1
+
+3) 
+Run the following command to create your repository.
+
+
+gcloud artifacts repositories \
+    create hello-repo \
+    --repository-format=docker \
+    --location=${REGION} \
+    --description="Docker \
+    repository"
+
+
+4)Build and tag the Docker image for hello-app:
+
+docker build -t \
+    ${REGION}-docker.pkg.dev/${PROJECT_ID}/watches/watch-app:v7 \
+    .
+
+./gcloud docker build -t \
+    ${REGION}-docker.pkg.dev/${PROJECT_ID}/watches/watch-app:v8 \
+   .
+
+
+5) Ensure the Artifact Registry API is enabled for the Google Cloud project you are working on:
+
+gcloud services enable \
+    artifactregistry.googleapis.com
+
+6) 
+Configure the Docker command-line tool to authenticate to Artifact Registry:
+
+gcloud auth configure-docker \
+    ${REGION}-docker.pkg.dev
+
+7)Push the Docker image you just built to the repository:
+
+docker push \
+    ${REGION}-docker.pkg.dev/${PROJECT_ID}/watches/watch-app:v8
+
+Now that the Docker image is stored in Artifact Registry, create a GKE cluster to run the hello-app, then deploy and expose an app.
+
+
+8) 
+
+Deploy the sample app to GKE
+Click Workloads.
+
+Click Deploy.
+
+In the Edit container section, select Existing container image.
+
+In the Image path field, click Select.
+
+In the Select container image pane, select the hello-app image you pushed to Artifact Registry.
+
+Click Select.
+
+Click Done.
+
+Click Continue.
+
+In the Configuration section, under Labels, enter app for Key
+and hello-app for Value.
+
+Under the Configuration section, click the View YAML button under Configuration YAML. This opens a YAML configuration file representing the two Kubernetes API resources about to be deployed into your cluster.
+
+Click Close.
+
+Click Deploy.
+
+When the Deployment Pods are ready, the Deployment details page opens.
+
+Under Managed pods, note the three running Pods for the hello-app Deployment.
+
+
+
+9) 
+Expose a sample app to the internet
+Click Workloads.
+
+Click on hello-app in the Name column.
+
+From the Deployment details page, click the Actions > Expose button.
+
+In the Expose dialog, under the Port Mapping section, set
+
+Target port to 8080.
+Service type drop-down list to Load balancer.
+Click Expose to create a Kubernetes Service for hello-app.
+
+When the Load Balancer is ready, the Service details page opens.
+
+Scroll down to the Exposing services secion and copy the external IP from the Endpoints column for the newly exposed Load balancer .
+
+Note that Endpoints are used as External IP addresses for the next sections.
