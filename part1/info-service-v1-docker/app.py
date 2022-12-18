@@ -20,7 +20,7 @@ from flask_swagger_ui import get_swaggerui_blueprint
 #         self.movement = row[7]
 
 # engine = create_engine("mysql+pymysql://root:root@localhost/cloud_computing")
-engine = create_engine("mysql+pymysql://root:root1234@10.92.32.3/watch")
+engine = create_engine("mysql+pymysql://root:root1234@10.41.0.4/watch")
 
 
 app = Flask(__name__)
@@ -35,6 +35,7 @@ SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
     }
 )
 app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
+
 
 @app.route("/",methods=["GET"])
 def healthCheck(sku=None):
@@ -91,7 +92,7 @@ def getWatch(sku=None):
 
 
 @app.route("/watch/delete/<sku>",methods=["POST"])
-def getWatch(sku=None):
+def delete_watch(sku=None):
     try:
         with engine.connect() as conn:
             result = conn.execute(text("select * from watches where watches.sku = '"+sku+"'")).fetchone()
@@ -169,7 +170,7 @@ def getWatch_mongo(sku=None):
         return "Something went wrong"
 
 @app.route("/watch_mongo/delete/<sku>",methods=["POST"])
-def getWatch_mongo(sku=None):
+def delete_Watch_mongo(sku=None):
     print("normal get", sku)
     try:
         x = collection.find_one({"sku":sku})
