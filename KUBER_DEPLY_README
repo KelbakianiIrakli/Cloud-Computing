@@ -1,6 +1,6 @@
  1) Clone the hello-app source code and Dockerfile by running the following commands
 
- git clone https://github.com/GoogleCloudPlatform/kubernetes-engine-samples cd kubernetes-engine-samples/hello-app
+ git clone https://github.com/KelbakianiIrakli/Cloud-Computing cd kubernetes-engine-samples/hello-app
 
 
 2) 
